@@ -52,6 +52,8 @@ let player1Name = "";
 let player2Name = "";
 let currentPlayer = "X";
 let gameOver = false;
+let win = false; 
+let draw = false; 
 
 //isSingle player function to check if it is single player 
 
@@ -104,8 +106,8 @@ for (let i = 0; i < cells.length; i++) {
     cells[i].addEventListener("click", () => {
         if (!gameOver && cells[i].textContent === "") {
             cells[i].textContent = currentPlayer;
-            var win = checkWin();
-            var draw = checkDraw();
+            win = checkWin();
+            draw = checkDraw();
             if (!win && !draw) {
                 switchPlayer();
                 if (player2Name === "Computer" && currentPlayer === 'O' && !gameOver) {
@@ -129,7 +131,7 @@ function switchPlayer() {
 }
 
 // Function to check if there is a win or draw
-function checkWin() {
+function checkWin() { 
     const winningMoves = [
         // Horizontal
         [0, 1, 2],
@@ -150,37 +152,37 @@ function checkWin() {
             cells[b].textContent === cells[c].textContent && 
             cells[a].textContent !== "") {
             gameOver = true;
-            
-            if (currentPlayer === 'X') {
-                playerTurnEl.textContent = `${player1Name} wins!`;
-            }
-            else {
-                playerTurnEl.textContent = `${player2Name} wins!`;
-            }
-            setTimeout(resetGame, 5000);
-            return true;
+          break  
         }
+    }if(gameOver){
+    if (currentPlayer === 'X') {
+        playerTurnEl.textContent = `${player1Name} wins!`;
     }
+    else {
+        playerTurnEl.textContent = `${player2Name} wins!`;
+    }
+    
+    setTimeout(resetGame, 3000);
+    return true;
+}
     return false;
 }
 
-// display "draw" when players didn't win 
+// display "draw" when players didn't win
 
 function checkDraw() {
     let draw = true;
     for (let i = 0; i < cells.length; i++) {
         if (cells[i].textContent === "") {
-            checkWin()
             draw = false;
             break;
         }
     }
     if (draw) {
-        const win = checkWin();
         if (!win) {
             playerTurnEl.textContent = "Draw!";
             gameOver = true;
-            setTimeout(resetGame, 5000);
+            setTimeout(resetGame, 3000);
             return true;
 
         }
@@ -205,19 +207,21 @@ function computerMove() {
     // Make the computer move by setting the cell's text content to 'O'
 
     cell.textContent = currentPlayer = 'O'
-
-    if(checkWin() == false){
+    win = checkWin()
+    if(win == false){
         switchPlayer()
         playerTurnEl.textContent = `${player2Name} placed an O at cell ${index + 1}. ${player1Name}'s turn.`;
     }
 }
 function resetGame() {
     
+    alert("The game has been reset.");
+
     // Clear the board by setting each cell's text content to an empty string
     for (let i = 0; i < cells.length; i++) {
         cells[i].textContent = "";
     }
-    
+
     // Reset the game variables
 
     player1Name = "";
@@ -226,8 +230,6 @@ function resetGame() {
     player1NameInput.value = player1Name;
     player2NameInput.value = player2Name;
     currentPlayer = "X";
-    gameOver = false;
-
-    alert("The game has been reset.");
+    gameOver = false;  
 
 }
